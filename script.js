@@ -211,8 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
     playerPosition = { row: 0, col: 0 };
     vectorPoints = generateRandomPoints();
     clearVectorInput();
+    resetCounters();
     updateScore();
+    window.location.reload(); // Esta linha recarrega a página
   }
+  
 
   function updateScore() {
     scoreElement.textContent = `Acertos: ${correctAnswers} | Erros: ${wrongAnswers}`;
