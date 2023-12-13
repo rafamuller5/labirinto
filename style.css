@@ -1,9 +1,60 @@
 body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  margin: 0;
+  background-color: #f1f1f1;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+#menu-content {
+  text-align: center;
+}
+
+.title {
+  font-size: 36px;
+  margin-bottom: 200px;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.start-button {
+  padding: 15px 30px;
+  font-size: 18px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.start-button:hover {
+  background-color: #45a049;
+}
+
+#game-container {
+  display: none;
+}
+
+#score {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#vector-info {
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
 #maze {
@@ -11,7 +62,7 @@ body {
   grid-template-columns: repeat(7, 80px);
   grid-template-rows: repeat(7, 80px);
   gap: 2px;
-  border: 2px solid #fff; /* Adiciona borda ao redor do tabuleiro */
+  border: 2px solid #fff;
 }
 
 .cell {
@@ -19,26 +70,36 @@ body {
   height: 80px;
   background-color: #ddd;
   position: relative;
+  box-sizing: border-box;
 }
 
-/* Adicione estilos para representar o jogador, a parede e a saída */
+/* Adicione estilos para representar o jogador, a parede, a saída e o presente */
 .wall {
-  background-color: #333; /* Cor das paredes */
+  background-color: #333;
 }
 
 .exit {
-  background-color: #f00; /* Cor da saída */
+  background-image: url('https://img.freepik.com/vetores-premium/desenho-animado-de-ilustracao-vetorial-de-cena-de-natal_969863-527.jpg');
+  background-size: cover;
 }
 
 .player {
   background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCvj_ozhyjHJZsg8nmug7L-F1T3geEqxqXFQ&usqp=CAU') center center no-repeat;
   background-size: cover;
+  border-radius: 50%;
+  border-color: black;
   animation: pulse 0.5s infinite alternate;
+  z-index: 1;
+}
+
+.gift {
+  background: url('https://img.irroba.com.br/fit-in/600x600/filters:fill(transparent):quality(80)/rettacom/catalog/zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzbanner0404/design-sem-nome-2023-04-12t090733531.png') center center no-repeat; /* Substitua 'caminho-da-imagem-do-presente' pelo caminho da sua imagem */
+  background-size: cover;
 }
 
 /* Adicione uma classe para destacar o ponto inicial */
 .start {
-  background-color: #0f0; /* Cor do ponto inicial (verde) */
+  background-color: #0f0;
 }
 
 @keyframes pulse {

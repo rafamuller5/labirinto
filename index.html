@@ -7,10 +7,23 @@
   <title>Labirinto de Vetores</title>
 </head>
 <body>
-  <div id="maze"></div>
-  <div id="vector-info"></div>
-  <div id="vector-input"></div>
-  <div id="score">Acertos: 0 | Erros: 0</div>
+  <div id="menu" class="menu-container">
+    <div id="menu-content">
+      <h1 id="title" class="title">Ajude o Papai Noel a pegar o presente e entregá-lo na casa.</h1>
+      <button id="start-button" class="start-button" onclick="startGame()">Iniciar</button>
+    </div>
+  </div>
+
+  <div id="game-container" style="display: none;">
+    <div id="score">Acertos: 0 | Erros: 0</div>
+    <br><br>
+    <div id="vector-info"></div>
+    <div id="vector-input"></div>
+    <br>
+    <div id="maze"></div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
+
