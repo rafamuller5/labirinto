@@ -8,18 +8,20 @@ body {
 
 #maze {
   display: grid;
-  grid-template-columns: repeat(7, 50px);
-  grid-template-rows: repeat(7, 50px);
+  grid-template-columns: repeat(7, 80px);
+  grid-template-rows: repeat(7, 80px);
   gap: 2px;
+  border: 2px solid #fff; /* Adiciona borda ao redor do tabuleiro */
 }
 
 .cell {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   background-color: #ddd;
-  border: 1px solid #fff;
+  position: relative;
 }
 
+/* Adicione estilos para representar o jogador, a parede e a saída */
 .wall {
   background-color: #333; /* Cor das paredes */
 }
@@ -29,12 +31,9 @@ body {
 }
 
 .player {
-  background-color: #00f; /* Cor do jogador */
-  animation: pulse 0.5s infinite alternate; /* Animação para destacar a célula do jogador */
-}
-
-.victory {
-  background-color: #ff0; /* Cor da vitória */
+  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCvj_ozhyjHJZsg8nmug7L-F1T3geEqxqXFQ&usqp=CAU') center center no-repeat;
+  background-size: cover;
+  animation: pulse 0.5s infinite alternate;
 }
 
 /* Adicione uma classe para destacar o ponto inicial */

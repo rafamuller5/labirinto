@@ -2,15 +2,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const maze = document.getElementById('maze');
   const vectorInfo = document.getElementById('vector-info');
   const vectorInputContainer = document.getElementById('vector-input');
+  const scoreElement = document.getElementById('score');
 
   const rows = 7;
   const cols = 7;
 
-  let playerPosition = { row: 0, col: 0 }; // Ponto inicial do jogador
-  let isAnswered = true; // Flag para controlar se o jogador já respondeu à pergunta
+  let playerPosition = { row: 0, col: 0 };
+  let isAnswered = true;
+  let mazeArray;
+  let vectorPoints;
+
+  let correctAnswers = 0;
+  let wrongAnswers = 0;
 
   function generateRandomMaze() {
-    let mazeArray;
     do {
       mazeArray = generateMazeArray();
     } while (!isExitAccessible(mazeArray));
@@ -22,15 +27,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function generateMazeArray() {
     const mazeArray = Array.from({ length: rows }, () => Array(cols).fill(0));
 
-    // Defina o ponto inicial e a saída
     playerPosition = { row: 0, col: 0 };
-    mazeArray[rows - 1][cols - 2] = 2; // Saída
+    mazeArray[rows - 1][cols - 2] = 2;
 
-    // Lógica de geração do labirinto
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         if (Math.random() < 0.2) {
-          mazeArray[i][j] = 1; // Parede
+          mazeArray[i][j] = 1;
         }
       }
     }
@@ -39,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function isExitAccessible(mazeArray) {
-    // Verifica se a saída é acessível (não está bloqueada por paredes)
     const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
     const stack = [[0, 0]];
 
@@ -53,16 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
       visited[row][col] = true;
 
       if (row === rows - 1 && col === cols - 2) {
-        return true; // Saída é alcançável
+        return true;
       }
 
-      stack.push([row + 1, col]); // Baixo
-      stack.push([row, col + 1]); // Direita
-      stack.push([row - 1, col]); // Cima
-      stack.push([row, col - 1]); // Esquerda
+      stack.push([row + 1, col]);
+      stack.push([row, col + 1]);
+      stack.push([row - 1, col]);
+      stack.push([row, col - 1]);
     }
 
-    return false; // Não é possível alcançar a saída
+    return false;
   }
 
   function renderMaze(mazeArray) {
@@ -138,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleCellClick(event) {
-    // Verifica se a pergunta foi respondida antes de permitir a seleção de outra célula
     if (!isAnswered) {
       return;
     }
@@ -146,14 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const clickedCellId = event.target.id;
     const [row, col] = clickedCellId.split('-').slice(1).map(Number);
 
-    // Impede que o jogador clique em quadrados de parede
     if (!event.target.classList.contains('wall')) {
-      // Permite que o jogador selecione somente o primeiro quadrado e seus vizinhos
       if (
         (row === playerPosition.row && Math.abs(col - playerPosition.col) === 1) ||
         (col === playerPosition.col && Math.abs(row - playerPosition.row) === 1)
       ) {
-        playerPosition = { row, col }; // Atualiza a posição inicial do jogador
+        playerPosition = { row, col };
         vectorPoints = generateRandomPoints();
 
         showPointsInfo();
@@ -161,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('verify-button').addEventListener('click', checkVector);
 
-        // Define a flag como falsa, exigindo uma resposta do jogador antes de clicar em outra célula
         isAnswered = false;
       }
     }
@@ -177,25 +175,29 @@ document.addEventListener('DOMContentLoaded', () => {
     if (userVector.row === calculatedVector.row && userVector.col === calculatedVector.col) {
       alert(`Vetor correto!\n\nVetor: (${userVector.row},${userVector.col})`);
 
-      // Realiza o movimento do jogador com base no vetor
       movePlayer();
-
-      // Limpa a entrada do vetor
+      increaseCorrectAnswers();
       clearVectorInput();
-
-      // Define a flag como verdadeira, permitindo que o jogador clique em outra célula
       isAnswered = true;
+      generateNewPoints(); // Adicionado para gerar novos pontos após uma resposta correta
     } else {
       alert('Vetor incorreto! Tente novamente.');
+
+      increaseWrongAnswers();
+
+      // Adicionado para reiniciar os contadores apenas se o jogador atingir um bloco vermelho (parede)
+      if (mazeArray[playerPosition.row][playerPosition.col] === 1) {
+        resetCounters();
+      }
     }
   }
 
   function movePlayer() {
     clearPlayerPosition();
 
-    // Verifica se o jogador atingiu a saída
     if (mazeArray[playerPosition.row][playerPosition.col] === 2) {
       alert('Parabéns! Você encontrou a saída.');
+      resetCounters(); // Adicionado para reiniciar os contadores quando o jogador atinge o bloco final
       resetGame();
       return;
     }
@@ -205,17 +207,43 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function resetGame() {
-    mazeArray = generateRandomMaze(); // Gera um novo labirinto
-    playerPosition = { row: 0, col: 0 }; // Reinicia a posição inicial do jogador
+    mazeArray = generateRandomMaze();
+    playerPosition = { row: 0, col: 0 };
     vectorPoints = generateRandomPoints();
     clearVectorInput();
+    updateScore();
   }
 
-  // Adiciona um evento de clique ao labirinto para receber a entrada do usuário
+  function updateScore() {
+    scoreElement.textContent = `Acertos: ${correctAnswers} | Erros: ${wrongAnswers}`;
+  }
+
+  // Adicionado para gerar novos pontos após uma resposta correta
+  function generateNewPoints() {
+    vectorPoints = generateRandomPoints();
+    showPointsInfo();
+  }
+
+  function increaseCorrectAnswers() {
+    correctAnswers++;
+    updateScore();
+  }
+
+  function increaseWrongAnswers() {
+    wrongAnswers++;
+    updateScore();
+  }
+
+  function resetCounters() {
+    correctAnswers = 0;
+    wrongAnswers = 0;
+    updateScore();
+  }
+
   maze.addEventListener('click', handleCellClick);
 
-  // Inicializa o jogo com um labirinto gerado aleatoriamente
-  let mazeArray = generateRandomMaze();
+  mazeArray = generateRandomMaze();
   showPointsInfo();
   showVectorInfo();
+  updateScore();
 });
